@@ -24,7 +24,7 @@ platform :ios, '8.0'
 pod 'DatePickerDialog-ObjC'
 ```
 
-To get the full benefits import `DatePickerDialog` wherever you import UIKit
+To get the full benefits import `LSLDatePickerDialog` wherever you import UIKit
 
 ``` objective-c
 #import <UIKit/UIKit.h>
@@ -32,19 +32,19 @@ To get the full benefits import `DatePickerDialog` wherever you import UIKit
 ```
 
 #### Manually
-1. Download and drop ```DatePickerDialog.h``` and  ```DatePickerDialog.m``` in your project.
+1. Download and drop ```LSLDatePickerDialog.h``` and  ```LSLDatePickerDialog.m``` in your project.
 2. Congratulations!
 
 ## Example
 
 ```objective-c
-#import "DatePickerDialog.h"
+#import "LSLDatePickerDialog.h"
 
 @implementation ViewController {
 
 
 -(void)openDatePicker {
-      DatePickerDialog *dpDialog = [[DatePickerDialog alloc] init];
+      LSLDatePickerDialog *dpDialog = [[LSLDatePickerDialog alloc] init];
 	    [dpDialog showWithTitle:@"DatePicker" doneButtonTitle:@"Done" cancelButtonTitle:@"Cancel"
 		      defaultDate:[NSDate date] minimumDate:nil maximumDate:nil datePickerMode:UIDatePickerModeDate
 		      callback:^(NSDate * _Nullable date){
