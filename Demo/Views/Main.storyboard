@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Ab-jk-8cr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="6Ab-jk-8cr">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -10,10 +10,18 @@
         <scene sceneID="t6x-Wb-ZaB">
             <objects>
                 <navigationController id="6Ab-jk-8cr" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="sHn-rO-aJm">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="sHn-rO-aJm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" red="0.050980396570000003" green="0.47843140360000003" blue="1" alpha="1" colorSpace="deviceRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="kag-BK-0aM">
+                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="sGP-qB-Bsc" kind="relationship" relationship="rootViewController" id="585-LD-Per"/>
                     </connections>
@@ -22,7 +30,7 @@
             </objects>
             <point key="canvasLocation" x="-1201" y="80"/>
         </scene>
-        <!--View Controller-->
+        <!--DatePickerDialogExample-->
         <scene sceneID="e9Y-ud-Avj">
             <objects>
                 <viewController id="sGP-qB-Bsc" customClass="ViewController" sceneMemberID="viewController">
@@ -31,7 +39,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Py9-Ux-dli"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="hpL-cP-DLb">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alQ-jg-VJr">
@@ -40,28 +48,31 @@
                                     <action selector="showPickBtnTapped:" destination="sGP-qB-Bsc" eventType="touchUpInside" id="3cF-jJ-89Z"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date selected:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xUI-BU-hd1">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Date selected" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7AC-e1-Om0">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="266" id="MTn-Fa-mIV"/>
+                                </constraints>
                                 <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="xUI-BU-hd1" firstAttribute="centerX" secondItem="alQ-jg-VJr" secondAttribute="centerX" id="3ns-jj-tQp"/>
+                            <constraint firstItem="alQ-jg-VJr" firstAttribute="top" secondItem="7AC-e1-Om0" secondAttribute="bottom" constant="5" id="EKS-Eg-Jsd"/>
                             <constraint firstItem="alQ-jg-VJr" firstAttribute="centerX" secondItem="hpL-cP-DLb" secondAttribute="centerX" id="QYG-ab-kZ4"/>
                             <constraint firstItem="alQ-jg-VJr" firstAttribute="centerY" secondItem="hpL-cP-DLb" secondAttribute="centerY" id="WiJ-4h-MJz"/>
-                            <constraint firstItem="xUI-BU-hd1" firstAttribute="top" secondItem="alQ-jg-VJr" secondAttribute="bottom" constant="5" id="b6U-Au-8em"/>
+                            <constraint firstItem="7AC-e1-Om0" firstAttribute="centerX" secondItem="hpL-cP-DLb" secondAttribute="centerX" id="jmv-oR-eoi"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Hhh-16-qJO"/>
+                    <navigationItem key="navigationItem" title="DatePickerDialogExample" id="Hhh-16-qJO"/>
                     <connections>
-                        <outlet property="dateLabel" destination="xUI-BU-hd1" id="5HM-Ir-m5f"/>
+                        <outlet property="dateTextField" destination="7AC-e1-Om0" id="aPv-qP-5uW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nm-Iv-9wB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-460" y="87"/>
+            <point key="canvasLocation" x="45.600000000000001" y="79.610194902548727"/>
         </scene>
     </scenes>
 </document>

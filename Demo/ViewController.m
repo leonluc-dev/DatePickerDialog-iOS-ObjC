@@ -19,14 +19,20 @@
 
 
 - (IBAction)showPickBtnTapped:(id)sender {
+    NSDate* currentDate = [NSDate dateWithTimeIntervalSinceNow:3600 * 24 * 7]; //One week from now
+    
+    NSDateComponents* dateComponents = [[NSDateComponents alloc] init];
+    dateComponents.year = -3;
+    NSDate* threeYearsAgo = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:currentDate options:0];
     
     LSLDatePickerDialog *dialog = [[LSLDatePickerDialog alloc] init];
-    [dialog showWithTitle:@"Demo" doneButtonTitle:@"Done" cancelButtonTitle:@"Cancel" defaultDate:[NSDate date] datePickerMode:UIDatePickerModeDate callback:^(NSDate * _Nullable date) {
+    [dialog showWithTitle:@"Demo" doneButtonTitle:@"Done" cancelButtonTitle:@"Cancel" defaultDate:[NSDate date] minimumDate:threeYearsAgo maximumDate:currentDate datePickerMode:UIDatePickerModeDate callback:^(NSDate * _Nullable date) {
         if(date)
         {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateStyle:NSDateFormatterMediumStyle];
-            [_dateLabel setText:[NSString stringWithFormat:@"Date selected: %@",[formatter stringFromDate:date]]];
+            [formatter setDateStyle:NSDateFormatterLongStyle];
+            [formatter setTimeStyle:NSDateFormatterLongStyle];
+            [_dateTextField setText:[formatter stringFromDate:date]];
         }
     }];
 }
