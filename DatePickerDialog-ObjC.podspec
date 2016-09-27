@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "DatePickerDialog-ObjC"
-  s.version      = "1.0.2"
+  s.version      = "1.0.1"
   s.summary      = "Date picker dialog for iOS"
   s.homepage     = "https://github.com/gameleon-dev/DatePickerDialog-iOS-ObjC"
   s.license      = { :type => "MIT", :file => "LICENSE" }
