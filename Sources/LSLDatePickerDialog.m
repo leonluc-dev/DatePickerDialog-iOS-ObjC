@@ -4,10 +4,10 @@
 @interface LSLDatePickerDialog()
 
 
-@property (nonatomic,strong) UIView* dialogView;
-@property (nonatomic,strong) UILabel* titleLabel;
-@property (nonatomic,strong) UIButton* cancelButton;
-@property (nonatomic,strong) UIButton* doneButton;
+@property (nonatomic,weak) UIView* dialogView;
+@property (nonatomic,weak) UILabel* titleLabel;
+@property (nonatomic,weak) UIButton* cancelButton;
+@property (nonatomic,weak) UIButton* doneButton;
 
 @property (nonatomic,strong) NSDate* defaultDate;
 @property (nonatomic) UIDatePickerMode datePickerMode;
@@ -32,23 +32,24 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
 }
 
 - (void)setupView{
-    _dialogView = [self createContainerView];
+    UIView* dialogView = [self createContainerView];
     
-    _dialogView.layer.shouldRasterize = YES;
-    _dialogView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    dialogView.layer.shouldRasterize = YES;
+    dialogView.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     self.layer.shouldRasterize = YES;
     self.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    _dialogView.layer.opacity = 0.5;
-    _dialogView.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1);
+    dialogView.layer.opacity = 0.5;
+    dialogView.layer.transform = CATransform3DMakeScale(1.3, 1.3, 1);
     
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
     
-    [self addSubview:self.dialogView];
+    [self addSubview:dialogView];
+    self.dialogView = dialogView;
 }
 
-/// Handle device orientation changes
+/** Handle device orientation changes */
 - (void)deviceOrientationDidChangeWithNotification:(NSNotification*)notification {
     self.frame = CGRectMake(0,0,[UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height);
     CGSize screenSize = [self countScreenSize];
@@ -71,7 +72,7 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     [self showWithTitle:title doneButtonTitle:doneButtonTitle cancelButtonTitle:cancelButtonTitle defaultDate:defaultDate minimumDate:nil maximumDate:nil datePickerMode:datePickerMode callback:callback];
 }
 
-/// Create the dialog view, and animate opening the dialog
+/** Create the dialog view, and animate opening the dialog */
 - (void)showWithTitle:(NSString*)title doneButtonTitle:(NSString*)doneButtonTitle cancelButtonTitle:(NSString*)cancelButtonTitle defaultDate:(NSDate*)defaultDate minimumDate:(NSDate*)minimumDate maximumDate:(NSDate*)maximumDate datePickerMode:(UIDatePickerMode)datePickerMode callback:(DatePickerCallback)callback {
     self.titleLabel.text = title;
     [self.doneButton setTitle:doneButtonTitle forState:UIControlStateNormal];
@@ -103,7 +104,7 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     }];
 }
 
-/// Dialog close animation then cleaning and removing the view from the parent
+/** Dialog close animation then cleaning and removing the view from the parent */
 - (void)close{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     CATransform3D currentTransform = self.dialogView.layer.transform;
@@ -128,7 +129,7 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
      }];
 }
 
-/// Creates the container view here: create the dialog, then add the custom content and buttons
+/** Creates the container view here: create the dialog, then add the custom content and buttons*/
 - (UIView*)createContainerView{
     CGSize screenSize = [self countScreenSize];
     CGSize dialogSize = CGSizeMake(300,230 + kDatePickerDialogDefaultButtonHeight + kDatePickerDialogDefaultButtonSpacerHeight);
@@ -165,17 +166,20 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     [dialogContainer addSubview:lineView];
     
     //Title
-    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,10,280,30)];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.font = [UIFont boldSystemFontOfSize: 17];
-    [dialogContainer addSubview:self.titleLabel];
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,10,280,30)];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.font = [UIFont boldSystemFontOfSize: 17];
+    [dialogContainer addSubview:titleLabel];
+    self.titleLabel = titleLabel;
     
-    self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 30, 0, 0)];
-    self.datePicker.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-    CGRect datePickerFrame = self.datePicker.frame;
+    UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 30, 0, 0)];
+    datePicker.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+    CGRect datePickerFrame = datePicker.frame;
     datePickerFrame.size.width = 300;
-    self.datePicker.frame = datePickerFrame;
-    [dialogContainer addSubview:self.datePicker];
+    datePickerFrame.size.height = 216;
+    datePicker.frame = datePickerFrame;
+    [dialogContainer addSubview:datePicker];
+    self.datePicker = datePicker;
     
     // Add the buttons
     [self addButtonsToView:dialogContainer];
@@ -183,30 +187,33 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     return dialogContainer;
 }
 
-/// Add buttons to container
+/** Add buttons to container */
 - (void)addButtonsToView:(UIView*)container {
     NSInteger buttonWidth = container.bounds.size.width / 2;
     
-    self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.cancelButton.frame = CGRectMake(0,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
-    [self.cancelButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
-    [self.cancelButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
-    self.cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
-    self.cancelButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
-    [self.cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:self.cancelButton];
+    UIButton* cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    cancelButton.frame = CGRectMake(0,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    [cancelButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
+    [cancelButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
+    cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+    cancelButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
+    [cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [container addSubview:cancelButton];
+    self.cancelButton = cancelButton;
     
-    self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.doneButton.frame = CGRectMake(buttonWidth,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
-    self.doneButton.tag = kDatePickerDialogDoneButtonTag;
-    [self.doneButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
-    [self.doneButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
-    self.doneButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
-    self.doneButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
-    [self.doneButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:self.doneButton];
+    UIButton* doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    doneButton.frame = CGRectMake(buttonWidth,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    doneButton.tag = kDatePickerDialogDoneButtonTag;
+    [doneButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
+    [doneButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
+    doneButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+    doneButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
+    [doneButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [container addSubview:doneButton];
+    self.doneButton = doneButton;
 }
 
+/** Selector for button tap */
 - (void)buttonTapped:(UIButton*) sender {
     if(sender.tag == kDatePickerDialogDoneButtonTag) {
         _callback(self.datePicker.date);
@@ -217,7 +224,7 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     [self close];
 }
 
-/// Count and return the screen's size
+/** Count and return the screen's size */
 - (CGSize)countScreenSize{
     CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
