@@ -10,6 +10,12 @@ typedef void (^DatePickerCallback)(NSDate* __nullable date);
 @property (nonatomic,weak) UIDatePicker* __nullable datePicker;
 
 /**
+ Initializes a LSLDatePickerDialog
+ @param showCancelButton Is the dialog's cancel button visible
+ */
+- (id _Nonnull)initWithCancelButton:(BOOL)showCancelButton;
+
+/**
  Shows a LSLDatePickerDialog on the current UIWindow
  @param callback The block to execute when the dialog closes. The date parameter will be nil if the cancel button was tapped
  */

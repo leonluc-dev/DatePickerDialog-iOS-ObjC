@@ -13,6 +13,8 @@
 @property (nonatomic) UIDatePickerMode datePickerMode;
 @property (nonatomic,strong) DatePickerCallback callback;
 
+@property BOOL showCancelButton;
+
 @end
 
 @implementation LSLDatePickerDialog
@@ -22,10 +24,16 @@ static CGFloat const kDatePickerDialogCornerRadius = 7.0;
 static NSInteger const kDatePickerDialogDoneButtonTag = 1;
 
 
-- (instancetype)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
+-(instancetype)init{
+    self = [self initWithCancelButton:YES];
+    return self;
+}
+
+-(instancetype)initWithCancelButton:(BOOL)showCancelButton{
+    self = [super initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width,UIScreen.mainScreen.bounds.size.height)];
     if(self)
     {
+        self.showCancelButton = showCancelButton;
         [self setupView];
     }
     return self;
@@ -76,7 +84,10 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
 - (void)showWithTitle:(NSString*)title doneButtonTitle:(NSString*)doneButtonTitle cancelButtonTitle:(NSString*)cancelButtonTitle defaultDate:(NSDate*)defaultDate minimumDate:(NSDate*)minimumDate maximumDate:(NSDate*)maximumDate datePickerMode:(UIDatePickerMode)datePickerMode callback:(DatePickerCallback)callback {
     self.titleLabel.text = title;
     [self.doneButton setTitle:doneButtonTitle forState:UIControlStateNormal];
-    [self.cancelButton setTitle:cancelButtonTitle forState:UIControlStateNormal];
+    if(_showCancelButton)
+    {
+        [self.cancelButton setTitle:cancelButtonTitle forState:UIControlStateNormal];
+    }
     self.datePickerMode = datePickerMode;
     self.callback = callback;
     self.defaultDate = defaultDate;
@@ -191,18 +202,31 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
 - (void)addButtonsToView:(UIView*)container {
     NSInteger buttonWidth = container.bounds.size.width / 2;
     
-    UIButton* cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    cancelButton.frame = CGRectMake(0,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
-    [cancelButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
-    [cancelButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
-    cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
-    cancelButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
-    [cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [container addSubview:cancelButton];
-    self.cancelButton = cancelButton;
+    CGRect leftButtonFrame = CGRectMake(0,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    CGRect rightButtonFrame = CGRectMake(buttonWidth,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    
+    if(!_showCancelButton){
+        buttonWidth = container.bounds.size.width;
+        leftButtonFrame = CGRectZero;
+        rightButtonFrame = CGRectMake(0,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    }
+    UIUserInterfaceLayoutDirection interfaceLayoutDirection = UIApplication.sharedApplication.userInterfaceLayoutDirection;
+    BOOL isLeftToRightDirection = interfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight;
+    if(_showCancelButton)
+    {
+        UIButton* cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        cancelButton.frame = isLeftToRightDirection ? leftButtonFrame : rightButtonFrame;
+        [cancelButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
+        [cancelButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
+        cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+        cancelButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
+        [cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [container addSubview:cancelButton];
+        self.cancelButton = cancelButton;
+    }
     
     UIButton* doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneButton.frame = CGRectMake(buttonWidth,container.bounds.size.height - kDatePickerDialogDefaultButtonHeight,buttonWidth,kDatePickerDialogDefaultButtonHeight);
+    doneButton.frame = isLeftToRightDirection ? rightButtonFrame : leftButtonFrame;
     doneButton.tag = kDatePickerDialogDoneButtonTag;
     [doneButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
     [doneButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];

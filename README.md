@@ -10,7 +10,7 @@ DatePickerDialog is an iOS drop-in class that displays an UIDatePicker within an
 
 ## Requirements
 
-DatePickerDialog works on iOS 7, 8 and 9. It depends on the following Apple frameworks, which should already be included with most Xcode templates:
+DatePickerDialog works on iOS 8, 9 and 10. It depends on the following Apple frameworks, which should already be included with most Xcode templates:
 
 * Foundation
 * UIKit
@@ -59,12 +59,22 @@ To get the full benefits import `LSLDatePickerDialog` wherever you import UIKit
 }
 ```
 
+## Dialog initalizer parameters
+- showCancelButton: Bool - default true
+
+Example initialization without 'Cancel' button:
+```objective-c
+LSLDatePickerDialog *dpDialog = [[LSLDatePickerDialog alloc] initWithCancelButton:NO];
+```
+
 ## Show parameters
 
 - title: String **(Required)**
 - doneButtonTitle: String
 - cancelButtonTitle: String
 - defaultDate: Date
+- minimumDate: Date
+- maximumDate: Date
 - datePickerMode: UIDatePickerMode **(Required)**
 - callback: ((date: Date) -> Void) **(Required)**
 
@@ -75,4 +85,4 @@ To get the full benefits import `LSLDatePickerDialog` wherever you import UIKit
 
 ## License
 
-This code is distributed under the terms and conditions of the [MIT license](LICENSE). 
+This code is distributed under the terms and conditions of the [MIT license](LICENSE).
