@@ -1,3 +1,5 @@
+[![CocoaPods](https://img.shields.io/cocoapods/v/DatePickerDialog-ObjC.svg)](https://cocoapods.org/pods/DatePickerDialog-ObjC)
+
 ## A port of the [Swift library](https://www.github.com/squimer/DatePickerDialog-iOS-Swift/) by Squimer
 
 This port was made so that the features of the DatePickerDialog could be used in a Objective-C project without having to import the Swift runtime in your app binary (which can increase the app binary size quite a bit)
