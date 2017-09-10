@@ -14,7 +14,11 @@
 @property (nonatomic,strong) DatePickerCallback callback;
 
 @property BOOL showCancelButton;
+@property (nonatomic,strong) NSLocale *locale;
 
+@property (nonatomic,strong) UIColor* textColor;
+@property (nonatomic,strong) UIColor* buttonColor;
+@property (nonatomic,strong) UIFont* font;
 @end
 
 @implementation LSLDatePickerDialog
@@ -29,11 +33,31 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     return self;
 }
 
+-(instancetype)initWithLocale:(NSLocale*)locale{
+    self = [self initWithTextColor:nil buttonColor:nil font:nil locale:locale cancelButton:YES];
+    return self;
+}
+
 -(instancetype)initWithCancelButton:(BOOL)showCancelButton{
+    self = [self initWithTextColor:nil buttonColor:nil font:nil locale:nil cancelButton:showCancelButton];
+    return self;
+}
+
+
+-(instancetype)initWithLocale:(NSLocale*)locale cancelButton:(BOOL)showCancelButton{
+    self = [self initWithTextColor:nil buttonColor:nil font:nil locale:locale cancelButton:showCancelButton];
+    return self;
+}
+
+-(instancetype)initWithTextColor:(UIColor*)textColor buttonColor:(UIColor*)buttonColor font:(UIFont*)font locale:(NSLocale*)locale cancelButton:(BOOL)showCancelButton{
     self = [super initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width,UIScreen.mainScreen.bounds.size.height)];
     if(self)
     {
+        self.textColor = textColor ? textColor : [UIColor blackColor];
+        self.buttonColor = buttonColor ? buttonColor : [UIColor blueColor];
+        self.font = font ? font : [UIFont boldSystemFontOfSize:15.0];
         self.showCancelButton = showCancelButton;
+        self.locale = locale;
         [self setupView];
     }
     return self;
@@ -95,7 +119,9 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     self.datePicker.date = self.defaultDate ? self.defaultDate : [NSDate date];
     self.datePicker.maximumDate = maximumDate;
     self.datePicker.minimumDate = minimumDate;
-    
+    if(self.locale) {
+        self.datePicker.locale = self.locale;
+    }
     /* Add dialog to main window */
     id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
     UIWindow* window = delegate.window;
@@ -179,11 +205,13 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     //Title
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,10,280,30)];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.font = [UIFont boldSystemFontOfSize: 17];
+    titleLabel.textColor = self.textColor;
+    titleLabel.font = [self.font fontWithSize:17.0f];
     [dialogContainer addSubview:titleLabel];
     self.titleLabel = titleLabel;
     
     UIDatePicker *datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, 30, 0, 0)];
+    [datePicker setValue:self.textColor forKeyPath:@"textColor"];
     datePicker.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     CGRect datePickerFrame = datePicker.frame;
     datePickerFrame.size.width = 300;
@@ -216,9 +244,9 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     {
         UIButton* cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         cancelButton.frame = isLeftToRightDirection ? leftButtonFrame : rightButtonFrame;
-        [cancelButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
-        [cancelButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
-        cancelButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+        [cancelButton setTitleColor:self.buttonColor forState:UIControlStateNormal];
+        [cancelButton setTitleColor:self.buttonColor forState:UIControlStateHighlighted];
+        cancelButton.titleLabel.font = [self.font fontWithSize:14.0];
         cancelButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
         [cancelButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [container addSubview:cancelButton];
@@ -228,9 +256,9 @@ static NSInteger const kDatePickerDialogDoneButtonTag = 1;
     UIButton* doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     doneButton.frame = isLeftToRightDirection ? rightButtonFrame : leftButtonFrame;
     doneButton.tag = kDatePickerDialogDoneButtonTag;
-    [doneButton setTitleColor:[UIColor colorWithRed: 0 green: 0.5 blue: 1 alpha: 1] forState:UIControlStateNormal];
-    [doneButton setTitleColor:[UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.5] forState:UIControlStateHighlighted];
-    doneButton.titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+    [doneButton setTitleColor:self.buttonColor forState:UIControlStateNormal];
+    [doneButton setTitleColor:self.buttonColor forState:UIControlStateHighlighted];
+    doneButton.titleLabel.font = [self.font fontWithSize:14.0];
     doneButton.layer.cornerRadius = kDatePickerDialogCornerRadius;
     [doneButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [container addSubview:doneButton];

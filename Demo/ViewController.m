@@ -25,7 +25,7 @@
     dateComponents.year = -3;
     NSDate* threeYearsAgo = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:currentDate options:0];
     
-    LSLDatePickerDialog *dialog = [[LSLDatePickerDialog alloc] init];
+    LSLDatePickerDialog *dialog = [[LSLDatePickerDialog alloc] initWithTextColor:[UIColor redColor] buttonColor:[UIColor redColor] font:[UIFont boldSystemFontOfSize:14.0] locale:nil cancelButton:YES];
     [dialog showWithTitle:@"Demo" doneButtonTitle:@"Done" cancelButtonTitle:@"Cancel" defaultDate:[NSDate date] minimumDate:threeYearsAgo maximumDate:currentDate datePickerMode:UIDatePickerModeDate callback:^(NSDate * _Nullable date) {
         if(date)
         {

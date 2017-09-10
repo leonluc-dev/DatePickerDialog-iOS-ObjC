@@ -16,6 +16,29 @@ typedef void (^DatePickerCallback)(NSDate* __nullable date);
 - (id _Nonnull)initWithCancelButton:(BOOL)showCancelButton;
 
 /**
+ Initializes a LSLDatePickerDialog
+ @param locale The locale used by the datepicker on the dialog
+ */
+- (id _Nonnull)initWithLocale:(nullable NSLocale*)locale;
+
+/**
+ Initializes a LSLDatePickerDialog
+ @param showCancelButton Is the dialog's cancel button visible
+ @param locale The locale used by the datepicker on the dialog
+ */
+- (id _Nonnull)initWithLocale:(nullable NSLocale*)locale cancelButton:(BOOL)showCancelButton;
+
+/**
+ Initializes a LSLDatePickerDialog
+ @param textColor The text color used by the dialog
+ @param buttonColor The button color used by the dialog
+ @param font The font used by the dialog
+ @param locale The locale used by the datepicker on the dialog
+ @param showCancelButton Is the dialog's cancel button visible
+ */
+- (id _Nonnull)initWithTextColor:(nullable UIColor*)textColor buttonColor:(nullable UIColor*)buttonColor font:(nullable UIFont*)font locale:(nullable NSLocale*)locale cancelButton:(BOOL)showCancelButton;
+
+/**
  Shows a LSLDatePickerDialog on the current UIWindow
  @param callback The block to execute when the dialog closes. The date parameter will be nil if the cancel button was tapped
  */

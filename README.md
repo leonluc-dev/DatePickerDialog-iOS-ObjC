@@ -61,10 +61,16 @@ To get the full benefits import `LSLDatePickerDialog` wherever you import UIKit
 
 ## Dialog initalizer parameters
 - showCancelButton: Bool - default true
+- locale: Locale - default nil
 
 Example initialization without 'Cancel' button:
 ```objective-c
 LSLDatePickerDialog *dpDialog = [[LSLDatePickerDialog alloc] initWithCancelButton:NO];
+
+```
+Example initialization with locale:
+```objective-c
+LSLDatePickerDialog *dpDialog = [[LSLDatePickerDialog alloc] initWithLocale:[Locale localeWithLocaleIdentifier:@“ja_JP”]];
 ```
 
 ## Show parameters
