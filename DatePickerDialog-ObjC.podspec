@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author       = { "Leon Lucardie" => "leonlucardie@gmail.com" }
   s.platform     = :ios
-  s.ios.deployment_target = "8.0"
+  s.ios.deployment_target = "12.0"
   s.source       = { :git => "https://github.com/leonluc-dev/DatePickerDialog-iOS-ObjC.git", :tag => s.version }
   s.source_files  = "Sources/LSLDatePickerDialog.{h,m}"
   s.requires_arc = true
